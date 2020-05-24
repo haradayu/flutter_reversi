@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'リバーシ',
       theme: ThemeData(
-                                                                                primarySwatch: Colors.blue,
+        primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: '対局'),
     );
@@ -26,6 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<List<int>> board = List.generate(8, (_) => List.generate(8, (_) => 0));
   TextStyle scoreLabelText(){
     return TextStyle(
+      color: Colors.orange,
       fontSize: 40,
       fontFamily: 'Roboto',
       fontStyle: FontStyle.normal,
@@ -88,32 +89,43 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.indigo,
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
+
         child: Column(
           children: <Widget>[
+            Spacer(flex: 1),
             Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children:[
                   Spacer(flex: 1),
-                  Icon(Icons.arrow_right, color: Colors.black.withOpacity(1.0),size:60),
+                  Icon(Icons.arrow_right,
+                      color: Colors.black.withOpacity(1.0),
+                      size:60
+                  ),
                   Text("黒 32",
                     style: scoreLabelText(),
                     textAlign: TextAlign.center,
                   ),
                   Spacer(flex: 1),
-                  Icon(Icons.arrow_right, color: Colors.black.withOpacity(1.0),size:60),
+                  Icon(Icons.arrow_right,
+                      color: Colors.black.withOpacity(1.0),
+                      size:60
+                  ),
                   Text("白 32",
                     style: scoreLabelText(),
                     textAlign: TextAlign.center,
                   ),
                   Spacer(flex: 1)]
             ),
+            Spacer(flex: 1),
             Center(
               child: reversiBoard()
-            )
+            ),
+            Spacer(flex: 3),
           ],
         ),
       ),
