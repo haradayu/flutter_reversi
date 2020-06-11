@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp/GameManager.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +24,10 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<List<int>> board = List.generate(8, (_) => List.generate(8, (_) => 0));
+  GameManager gm = GameManager();
+  double blackArrowOpacity = 1.0;
+  int blackScore = 2;
+  int whiteScore = 2;
   TextStyle scoreLabelText(){
     return TextStyle(
       color: Colors.orange,
@@ -34,13 +38,13 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget stone(x,y){
-    if (board[x][y] == 0){
+    if (gm.getCellStatus(x, y) == GameManager.blank){
       return Container();
     }else{
       var color;
-      if (board[x][y] == 1){
+      if (gm.getCellStatus(x, y) == GameManager.black){
         color = Colors.black;
-      }else if(board[x][y] == 2){
+      }else if(gm.getCellStatus(x, y) == GameManager.white){
         color = Colors.white;
       }
       return Container(
@@ -81,9 +85,20 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onTap(x,y){
-    setState(() {
-      board[x][y] = (board[x][y] + 1)%3;
-    });
+    bool flag = gm.putStone(x, y);
+    print(flag);
+    if(flag) {
+      setState(() {
+        if(gm.getTurn() == GameManager.black){
+          blackArrowOpacity = 1.0;
+        }else{
+          blackArrowOpacity = 0.0;
+        }
+        blackScore = gm.getScore(GameManager.black);
+        whiteScore = gm.getScore(GameManager.white);
+
+      });
+    }
   }
 
   @override
@@ -103,19 +118,19 @@ class _MyHomePageState extends State<MyHomePage> {
                 children:[
                   Spacer(flex: 1),
                   Icon(Icons.arrow_right,
-                      color: Colors.black.withOpacity(1.0),
+                      color: Colors.black.withOpacity(blackArrowOpacity),
                       size:60
                   ),
-                  Text("黒 32",
+                  Text("黒 $blackScore",
                     style: scoreLabelText(),
                     textAlign: TextAlign.center,
                   ),
                   Spacer(flex: 1),
                   Icon(Icons.arrow_right,
-                      color: Colors.black.withOpacity(1.0),
+                      color: Colors.black.withOpacity(1-blackArrowOpacity),
                       size:60
                   ),
-                  Text("白 32",
+                  Text("白 $whiteScore",
                     style: scoreLabelText(),
                     textAlign: TextAlign.center,
                   ),
@@ -125,7 +140,20 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: reversiBoard()
             ),
-            Spacer(flex: 3),
+            Center(
+              child: Visibility(
+                visible: false,
+                child: RaisedButton(
+                  child: Text("Pass"),
+                  color: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+            ),
+            Spacer(),
           ],
         ),
       ),
